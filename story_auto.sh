@@ -1,71 +1,80 @@
 #!/bin/bash
 
-# Function to display the help menu
-show_help() {
-  echo "Usage: $0 [option]"
-  echo ""
-  echo "Options:"
-  echo "  install-deps         Install necessary dependencies"
-  echo "  install-story-geth   Download and install Story-Geth binary"
-  echo "  install-story        Download and install Story binary"
-  echo "  init-node            Initialize Story Iliad node"
-  echo "  create-services      Create and reload systemd services for Story and Story-Geth"
-  echo "  start-services       Start Story and Story-Geth services"
-  echo "  check-logs-geth      View Story-Geth logs"
-  echo "  check-logs-story     View Story logs"
-  echo "  check-sync-status    Check the sync status of the node"
-  echo "  check-block-sync     Check remaining blocks to sync"
-  echo "  export-validator     Export validator public and private keys"
-  echo "  create-validator     Create validator with staked amount"
-  echo "  help                 Display this help menu"
+# Function to display the numbered menu
+show_menu() {
+  echo "===================================="
+  echo "       Story Node Management        "
+  echo "===================================="
+  echo "1) Install necessary dependencies"
+  echo "2) Download and install Story-Geth binary"
+  echo "3) Download and install Story binary"
+  echo "4) Initialize Story Iliad node"
+  echo "5) Create systemd services for Story and Story-Geth"
+  echo "6) Start Story and Story-Geth services"
+  echo "7) View Story-Geth logs"
+  echo "8) View Story logs"
+  echo "9) Check sync status"
+  echo "10) Check block sync progress"
+  echo "11) Export validator keys"
+  echo "12) Create validator with staked amount"
+  echo "13) Exit"
 }
 
-# Check if the Makefile exists
-if [ ! -f "Makefile" ]; then
-  echo "Makefile not found! Ensure you have a valid Makefile in the current directory."
-  exit 1
-fi
+# Function to process the user's choice
+read_choice() {
+  local choice
+  read -p "Enter your choice [1-13]: " choice
+  case $choice in
+    1)
+      make install-deps
+      ;;
+    2)
+      make install-story-geth
+      ;;
+    3)
+      make install-story
+      ;;
+    4)
+      make init-node
+      ;;
+    5)
+      make create-story-geth-service
+      make create-story-service
+      ;;
+    6)
+      make start-services
+      ;;
+    7)
+      make logs-story-geth
+      ;;
+    8)
+      make logs-story
+      ;;
+    9)
+      make check-sync-status
+      ;;
+    10)
+      make check-block-sync
+      ;;
+    11)
+      make export-validator
+      ;;
+    12)
+      make create-validator
+      ;;
+    13)
+      echo "Exiting..."
+      exit 0
+      ;;
+    *)
+      echo "Invalid choice! Please choose a number between 1 and 13."
+      ;;
+  esac
+}
 
-# Command-line argument processing
-case "$1" in
-  install-deps)
-    make install-deps
-    ;;
-  install-story-geth)
-    make install-story-geth
-    ;;
-  install-story)
-    make install-story
-    ;;
-  init-node)
-    make init-node
-    ;;
-  create-services)
-    make create-story-geth-service
-    make create-story-service
-    ;;
-  start-services)
-    make start-services
-    ;;
-  check-logs-geth)
-    make logs-story-geth
-    ;;
-  check-logs-story)
-    make logs-story
-    ;;
-  check-sync-status)
-    make check-sync-status
-    ;;
-  check-block-sync)
-    make check-block-sync
-    ;;
-  export-validator)
-    make export-validator
-    ;;
-  create-validator)
-    make create-validator
-    ;;
-  help | *)
-    show_help
-    ;;
-esac
+# Main loop
+while true; do
+  show_menu
+  read_choice
+  echo ""  # Empty line for better readability
+done
